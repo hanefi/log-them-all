@@ -1,17 +1,19 @@
 package com.hanefionaldi;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.Statement;
+import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.openfire.container.Plugin;
 import org.jivesoftware.openfire.container.PluginManager;
 import org.jivesoftware.openfire.interceptor.InterceptorManager;
 import org.jivesoftware.openfire.interceptor.PacketInterceptor;
 import org.jivesoftware.openfire.interceptor.PacketRejectedException;
 import org.jivesoftware.openfire.session.Session;
-import org.xmpp.packet.Message;
-import org.xmpp.packet.Packet;
-
-import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xmpp.packet.Message;
+import org.xmpp.packet.Packet;
 
 /**
  * A sample plugin for Openfire.
@@ -20,6 +22,23 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
     private Logger Log;
 
     private InterceptorManager interceptorManager;
+
+    private void saveInDB(String packet, String session, boolean incoming, boolean processed) {
+        Connection con = null;
+        Statement stmt = null;
+        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%b', '%b')", packet, session, incoming, processed)
+        try {
+            con = DbConnectionManager.getConnection();
+            stmt = con.createStatement();
+            stmt.execute(sql);
+        } catch (SQLException ex) {
+            Log.error(ex);
+        }
+        finally {
+            DbConnectionManager.closeConnection(con);
+            DbConnectionManager.closeStatement(stmt);
+        }
+    }
 
     public void initializePlugin(PluginManager manager, File pluginDirectory) {
         Log = LoggerFactory.getLogger(LogThemAllPlugin.class);
@@ -34,6 +53,8 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
     public void interceptPacket(Packet packet, Session session, boolean incoming, boolean processed)
             throws PacketRejectedException
     {
+        saveInDB(packet.toString(), session.toString(), incoming, processed);
+
         Log.info("Packet intercepted {}", packet);
         // Ignore any packets that haven't already been processed by interceptors.
         if (!processed) {

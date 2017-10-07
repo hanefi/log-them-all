@@ -6,13 +6,16 @@
     <!-- Plugin meta-data -->
     <name>LogThemAll Plugin</name>
     <description>This is a sample plugin that logs all the messages.</description>
-    <author>Onaldi Software</author>
+    <author>Hanefi Onaldi</author>
 
     <version>0.2</version>
     <date>06/10/2017</date>
     <url>www.example.com</url>
     <minServerVersion>4.0.0</minServerVersion>
     <licenseType>gpl</licenseType>
+
+    <databaseKey>LogThemAll</databaseKey>
+    <databaseVersion>0</databaseVersion>
 
     <!-- Admin console entries -->
     <adminconsole>
