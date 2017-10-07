@@ -2,6 +2,7 @@ package com.hanefionaldi;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import org.jivesoftware.database.DbConnectionManager;
 import org.jivesoftware.openfire.container.Plugin;
@@ -26,13 +27,13 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
     private void saveInDB(String packet, String session, boolean incoming, boolean processed) {
         Connection con = null;
         Statement stmt = null;
-        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%b', '%b')", packet, session, incoming, processed)
+        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%b', '%b')", packet, session, incoming, processed);
         try {
             con = DbConnectionManager.getConnection();
             stmt = con.createStatement();
             stmt.execute(sql);
         } catch (SQLException ex) {
-            Log.error(ex);
+            Log.error(ex.toString());
         }
         finally {
             DbConnectionManager.closeConnection(con);
