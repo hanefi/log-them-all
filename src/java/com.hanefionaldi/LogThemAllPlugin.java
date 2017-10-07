@@ -27,7 +27,7 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
     private void saveInDB(String packet, String session, int incoming, int processed) {
         Connection con = null;
         Statement stmt = null;
-        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%d', '%d')", packet, session, incoming, processed);
+        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', %s, %s)", packet, session, incoming, processed);
         try {
             con = DbConnectionManager.getConnection();
             stmt = con.createStatement();

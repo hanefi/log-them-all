@@ -8,7 +8,7 @@
     <description>This is a sample plugin that logs all the messages.</description>
     <author>Hanefi Onaldi</author>
 
-    <version>0.4</version>
+    <version>0.11</version>
     <date>06/10/2017</date>
     <url>www.example.com</url>
     <minServerVersion>4.0.0</minServerVersion>
