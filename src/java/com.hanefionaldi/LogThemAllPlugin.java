@@ -24,10 +24,10 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
 
     private InterceptorManager interceptorManager;
 
-    private void saveInDB(String packet, String session, boolean incoming, boolean processed) {
+    private void saveInDB(String packet, String session, int incoming, int processed) {
         Connection con = null;
         Statement stmt = null;
-        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%b', '%b')", packet, session, incoming, processed);
+        String sql = String.format("INSERT INTO ofLogThemAll (packet, session, incoming, processed) VALUES ('%s', '%s', '%d', '%d')", packet, session, incoming, processed);
         try {
             con = DbConnectionManager.getConnection();
             stmt = con.createStatement();
@@ -54,7 +54,7 @@ public class LogThemAllPlugin implements Plugin, PacketInterceptor {
     public void interceptPacket(Packet packet, Session session, boolean incoming, boolean processed)
             throws PacketRejectedException
     {
-        saveInDB(packet.toString(), session.toString(), incoming, processed);
+        saveInDB(packet.toString(), session.toString(), incoming ? 1 : 0, processed ? 1 : 0);
 
         Log.info("Packet intercepted {}", packet);
         // Ignore any packets that haven't already been processed by interceptors.
